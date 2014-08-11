@@ -4,19 +4,17 @@
 
 from __future__ import print_function
 import Tkinter
+import tkFont
 import sys
 import subprocess
 import random
 import os
-import time
 
 
 def valid_pass(test_password, all_symbols):
     return all(set(test_password) & set(x) for x in all_symbols)
 
 def get_password():
-    print('Getting password')
-
     length = 10
 
     all_symbols = 'ABCDEFGHJKLMNPQRSTUVWXYZ',\
@@ -24,14 +22,12 @@ def get_password():
                   '23456789'
 
     if length < len(all_symbols):
-       raise ValueError('must be at least {}'
+        raise ValueError('must be at least {}'
                          ' characters long!'.format(len(all_symbols)))
     new_password = ''
     while not valid_pass(new_password, all_symbols):
         new_password = ''.join(random.choice(''.join(all_symbols))
                                for _ in xrange(length))
-
-    print('Got password:', new_password)
 
     return new_password
 
@@ -77,7 +73,6 @@ def view_file(filename):
     if sys.platform.startswith('linux'):
         subprocess.call(['xdg-open', filename])
     else:
-        # pylint: disable=E1101
         os.startfile(filename)
 
 
@@ -132,38 +127,37 @@ def update_password(field):
 
 def main():
     top = Tkinter.Tk()
-    top.minsize(200, 100)
-    top.title('Bank-Client Generator')
-    #center(top)
+    top.title('Password & PDF generator')
 
+    monospace_font = tkFont.Font(family='monospace', size=11)
 
     username_label = Tkinter.Label(text='Username:')
-    username_label.pack(side=Tkinter.TOP)
-    
-    username_entry = Tkinter.Entry(top)
-    username_entry.pack(side=Tkinter.TOP)
+    username_label.grid(row=0, column=0)
+
+    username_entry = Tkinter.Entry(top, font=monospace_font)
+    username_entry.grid(row=0, column=1)
 
 
     password_label = Tkinter.Label(text='Password:')
-    password_label.pack(side=Tkinter.TOP)
-    
-    password_entry = Tkinter.Entry(top)
-    password_entry.pack(side=Tkinter.TOP)
+    password_label.grid(row=1, column=0)
+
+    password_entry = Tkinter.Entry(top, font=monospace_font)
+    password_entry.grid(row=1, column=1)
 
 
     button_update_password = Tkinter.Button(top,
-                                            text='Update Password',
+                                            text='Generate New Password',
                                             command=
                                             lambda:
                                             update_password(password_entry))
-    button_update_password.pack()
+    button_update_password.grid(row=1, column=2)
 
     button_create_pdf = Tkinter.Button(top,
                                        text='Create PDF',
                                        command=lambda:
                                        create_pdf(username_entry,
                                                   password_entry))
-    button_create_pdf.pack()
+    button_create_pdf.grid(row=2, column=0, columnspan=3)
 
 
     update_password(password_entry)
