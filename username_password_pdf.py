@@ -100,10 +100,6 @@ def create_pdf(username_entry, password_entry):
         print('Password too small! Aborting.')
         return
 
-
-    print('Final Username:', username)
-    print('Final Password:', password)
-
     with open('username.txt', 'w') as file_username:
         file_username.write(username)
     with open('password.txt', 'w') as file_password:
